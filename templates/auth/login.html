@@ -21,19 +21,69 @@
         </div>
         <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <div class="card-body">
-            <fieldset class="fieldset">
-              <label class="label">Email</label>
-              <input type="email" class="input" placeholder="Email" />
-              <label class="label">Password</label>
-              <input type="password" class="input" placeholder="Password" />
-              <div><a class="link link-hover">Forgot password?</a></div>
-              <button class="btn btn-neutral mt-4">Login</button>
-            </fieldset>
+            <form @submit="onSubmit">
+              <fieldset class="fieldset">
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend">Username</legend>
+                  <input type="text" v-model="username" class="input" placeholder="username" />
+                </fieldset>
+                <fieldset class="fieldset">
+                  <legend class="fieldset-legend">Password</legend>
+                  <input type="password" v-model="password" class="input" placeholder="password" />
+                </fieldset>
+                <button class="btn btn-neutral mt-4">Login</button>
+              </fieldset>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </main>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      delimiters: ["[{", "}]"],
+      data() {
+        return {
+          username: "",
+          password: "",
+        };
+      },
+      methods: {
+        async onSubmit(e) {
+          e.preventDefault();
+          try {
+            const result = await axios.post("{% url 'login-api' %}", {
+              username: this.username,
+              password: this.password,
+            });
+            
+            if (result.data.success) {
+              Swal.fire({
+                title: "Success!",
+                text: result.data.message,
+                icon: "success",
+              });
+              return;
+            }
+
+            throw new Error(result.data.message || "Unknown error occurred.");
+          } catch (error) {
+            Swal.fire({
+              title: "Error!",
+              text:
+                (error.response?.data?.message) ||
+                error.message ||
+                "Unexpected error.",
+              icon: "error",
+            });
+          }
+        },
+      },
+    }).mount("#app");
+  </script>
+
 </body>
 
 </html>

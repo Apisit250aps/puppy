@@ -15,12 +15,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.shortcuts import render
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", lambda req: render(req, "base.html"), name="index"),
+    path("", lambda req: render(req, "index.html"), name="index"),
     # auth
-    path("login", lambda req: render(req, "auth/login.html"), name="index"),
+    path("login", lambda req: render(req, "auth/login.html"), name="login-page"),
+    # api
+    path("api/", include("wallet.urls")),
 ]
