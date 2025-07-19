@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 {% block body %}
 <main id="app">
-
+  <drawer-component>
+    
+  </drawer-component>
 </main>
+{% include 'components/drawer-component.html' %}
+<script>
+  const { createApp } = Vue;
+  createApp({
+    delimiters: ["[{", "}]"],
+    components: {
+      DrawerComponent
+    },
+    data() {
+      return {
+        
+      };
+    }
+  }).mount("#app");
+</script>
+
 {% endblock body %}
